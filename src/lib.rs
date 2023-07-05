@@ -210,11 +210,14 @@ impl Client {
             .send()
             .await;
         let api_response: Result<ApiResponse, serde_json::Error> = serde_json::from_str(&response?.text().await?);
+        log::trace!("{:?}", api_response);
         match api_response {
             Ok(r) => {
+                log::trace!("{:?}", r);
                 return Ok(r.results[0].history.clone())
             }
             Err(e) => {
+                log::error!("{:?}", e);
                 return Err(Box::new(e));
             }
             
