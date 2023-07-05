@@ -158,8 +158,8 @@ pub enum Mode {
 }
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct History {
-    internal: Vec<Vec<String>>,
-    visible: Vec<Vec<String>>
+    pub internal: Vec<Vec<String>>,
+    pub visible: Vec<Vec<String>>
 }
 impl History {
     pub fn default() -> Self {
