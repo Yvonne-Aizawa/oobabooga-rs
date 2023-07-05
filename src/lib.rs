@@ -156,16 +156,32 @@ pub enum Mode {
     #[serde(rename = "instruct")]
     Instruct
 }
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct History {
-    internal: Vec<String>,
-    visible: Vec<String>,
+    internal: Vec<Vec<String>>,
+    visible: Vec<Vec<String>>
 }
 impl History {
     pub fn default() -> Self {
         History { internal: vec![], visible: vec![] }
     }    
+    pub fn undo(&mut self) -> History {
+        self.internal.pop();
+        self.visible.pop();
+        self.clone()
+    }
+    pub fn last(self) -> Option<String> {
+        let mut history = self;
+        let last = history.internal.pop();
+        match last {
+            Some(last) => {
+                return Some(last[1].clone());
+            }
+            None => None,
+        }
+    }
 }
+
 pub struct Config {
     pub url: String,
 
@@ -179,7 +195,7 @@ impl Client {
             config
         }
     }
-    pub async fn get_chat(&self) -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
+    pub async fn get_chat(&self) -> Result<History, Box<dyn std::error::Error + Send + Sync>> {
         let chat_request = ChatRequest::default();
         let mut headers = header::HeaderMap::new();
         headers.insert("Content-Type", "application/json".parse().unwrap());
@@ -194,10 +210,10 @@ impl Client {
             .body(chat_request.to_string())
             .send()
             .await;
-        eprintln!("{:?}", response);
-        match response {
+        let api_response: Result<ApiResponse, serde_json::Error> = serde_json::from_str(&response?.text().await?);
+        match api_response {
             Ok(r) => {
-                return Ok(r.text().await?);
+                return Ok(r.results[0].history.clone())
             }
             Err(e) => {
                 return Err(Box::new(e));
@@ -208,6 +224,14 @@ impl Client {
         
 
     }
+}
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ChatResult {
+    pub history: History,
+}
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ApiResponse {
+    pub results: Vec<ChatResult>,
 }
 impl Config {
     /// Create a new configuration
