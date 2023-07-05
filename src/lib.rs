@@ -195,8 +195,7 @@ impl Client {
             config
         }
     }
-    pub async fn get_chat(&self) -> Result<History, Box<dyn std::error::Error + Send + Sync>> {
-        let chat_request = ChatRequest::default();
+    pub async fn get_chat(&self, chat_request: ChatRequest) -> Result<History, Box<dyn std::error::Error + Send + Sync>> {
         let mut headers = header::HeaderMap::new();
         headers.insert("Content-Type", "application/json".parse().unwrap());
     
@@ -263,7 +262,7 @@ mod tests {
         let mut  chat_request = super::ChatRequest::default();
         chat_request.user_input = "I am bored".to_string();
         chat_request.mode = super::Mode::Chat;
-        let response = client.get_chat().await;
+        let response = client.get_chat(chat_request).await;
         assert_eq!(response.is_ok(), true);
     }
 }
