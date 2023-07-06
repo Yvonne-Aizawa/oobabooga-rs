@@ -23,6 +23,8 @@ pub struct ChatRequest {
     pub _continue: bool,
     #[serde(rename = "stop_at_newline")]
     pub stop_at_newline: bool,
+    #[serde(rename = "chat_promt_size")]
+    pub chat_prompt_size: u32,
     #[serde(rename = "chat_generation_attempts")]
     pub chat_generation_attempts: u32,
     #[serde(rename = "chat-instruct_command")]
@@ -48,6 +50,8 @@ pub struct ChatRequest {
     pub eta_cutoff: f32,
     #[serde(rename = "tfs")]
     pub tfs: u64,
+    #[serde(rename = "top_a")]
+    pub top_a: u32,
     /// Exponential penalty factor for repeating prior tokens. 1 means no penalty, higher value = less repetition, lower value = more repetition.
     #[serde(rename = "repetition_penalty")]
     pub repetition_penalty: f32,
@@ -112,32 +116,37 @@ pub fn default() -> Self{
         character: "Example".to_string(),
         instruction_template: "Vicuna-v1.1".to_string(),
         your_name: "You".to_string(),
+
         regenerate: false,
-        _continue: false,
+        _continue: true,
         stop_at_newline: false,
+        chat_prompt_size: 2048,
         chat_generation_attempts: 1,
-        chat_instruct_command: "".to_string(),
+        chat_instruct_command: "Continue the chat dialogue below. Write a single reply for the character \"<|character|>\".\n\n<|prompt|>".to_string(),
+        
         preset: "None".to_string(),
         do_sample: true,
-        temprature: 1.0,
-        top_p: 0.5,
+        temprature: 0.7,
+        top_p: 0.1,
         typical_p: 1.0,
         epsilon_cutoff: 0.0,
         eta_cutoff: 0.0,
         tfs: 1,
+        top_a: 0,
         repetition_penalty: 1.18,
         repetition_penalty_range: 0.0,
         encoder_repetition_penalty: 1.0,
         top_k: 40,
         min_length: 0,
         no_repeast_ngram_size: 0,
-        num_beams: 4,
+        num_beams: 1,
         penalty_alpha: 0.0,
         length_penalty: 1.0,
         early_stopping: false,
         mirostat_mode: 0,
         mirostat_mode_tau: 5,
         mirostat_mode_eta: 0.1,
+        
         seed: -1,
         add_bos_token: true,
         truncation_length: 2048,
