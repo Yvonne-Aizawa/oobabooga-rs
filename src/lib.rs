@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use reqwest::{header, StatusCode};
+use reqwest::{header};
 #[derive(Serialize, Deserialize)]
 
 pub struct ChatRequest {
