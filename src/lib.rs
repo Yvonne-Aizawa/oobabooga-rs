@@ -69,7 +69,7 @@ pub struct ChatRequest {
     /// If not set to 0, specifies the length of token sets that are completely blocked from repeating at all. Higher values = blocks larger phrases, lower values = blocks words or letters from repeating. Only 0 or high values are a good idea in most cases.
     pub min_length: u32,
     #[serde(rename = "no_repeat_ngram_size")]
-    pub no_repeast_ngram_size: u32,
+    pub no_repeat_ngram_size: u32,
     #[serde(rename = "num_beams")]
     pub num_beams: u32,
     /// Contrastive Search is enabled by setting this to greater than zero and unchecking “do_sample”. It should be used with a low value of top_k, for instance, top_k = 4.
@@ -138,7 +138,7 @@ pub fn default() -> Self{
         encoder_repetition_penalty: 1.0,
         top_k: 40,
         min_length: 0,
-        no_repeast_ngram_size: 0,
+        no_repeat_ngram_size: 0,
         num_beams: 1,
         penalty_alpha: 0.0,
         length_penalty: 1.0,
